@@ -21,4 +21,7 @@ class Appointment extends Model
             'appointment'
         ];
     }
+    public function Appointments() {
+        return $this->belongsTo(Barber::class);
+    }
 }

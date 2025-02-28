@@ -17,4 +17,7 @@ class Barber extends Model
             'barber_name'
         ];
     }
+    public function Appointments() {
+        return $this->hasMany(Appointment::class);
+    }
 }

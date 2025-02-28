@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->foreign('id')->references('id')->on('barbers')->onDelete('cascade');
-            $table->timestamp("appointment");
+            $table->unsignedBigInteger("barber_id");
+            $table->foreign('barber_id')->references('id')->on('barbers')->onDelete('cascade');
+            $table->date("appointment");
+            $table->timestamps();
         });
     }
 

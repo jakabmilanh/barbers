@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use Illuminate\Validation\ValidationException;
 class AppointmentController extends Controller
 {
     public function index()
@@ -13,12 +14,16 @@ class AppointmentController extends Controller
         
     }
     public function store(Request $request)
-    {
+    {   try {
         $request ->validate([
-            "name"=> "required|255|string",
-            "barber_id"=> "required|255|number",
-            "appointment"=> "required|255|date"
+            "name"=> "required|max:255|string",
+            "barber_id"=> "required|max:255|integer|exists:barbers,id",
+            "appointment"=> "required|max:255|date"
             ]);
+    } catch (ValidationException $th) {
+       return response()->json([$th->errors()], 400);
+    }
+        
         if(Appointment::create($request->all()))
         {
             return response()->json([["uzenet"=> "Sikeres Rögzítés"]]);
@@ -29,9 +34,9 @@ class AppointmentController extends Controller
         }
         
     }
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $appointment = Appointment::find($id);
+        $appointment = Appointment::find($request->id);
         $appointment->delete();
 
         if(response()->json(["success"=> true]))
